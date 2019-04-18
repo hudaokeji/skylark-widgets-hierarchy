@@ -1,2 +1,2 @@
 # skylark-ui-hierarchy
-The skylark ui library for hierarchical data.
+The skylark tree widget library for hierarchical data.
