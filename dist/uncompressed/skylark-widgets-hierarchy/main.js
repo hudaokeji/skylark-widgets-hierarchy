@@ -1,5 +1,5 @@
 define([
-    "skylark-utils-dom/query",
+    "skylark-domx-query",
     "./Hierarchy",
     "./addons/changed",
     "./addons/checkbox",

@@ -6,7 +6,7 @@ define([
   "skylark-domx-geom",
   "skylark-domx-query",
   "./menu",
-  "Hierarchy"
+  "../Hierarchy"
 ],function(langx,browser,eventer,noder,geom,$, menu,jstree){
 
 	"use strict";

@@ -10,7 +10,7 @@ define([], function () {
         'skylark-domx-geom',
         'skylark-domx-query',
         './menu',
-        'Hierarchy'
+        '../Hierarchy'
     ], function (langx, browser, eventer, noder, geom, $, menu, jstree) {
         var BLANKRE = /^\s*$/g, IDREGEX = /[\\:&!^|()\[\]<>@*'+~#";,= \/${}%]/g, escapeId = function (id) {
                 return (id || '').replace(IDREGEX, '\\$&');

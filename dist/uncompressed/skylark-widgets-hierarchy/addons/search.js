@@ -5,7 +5,7 @@ define([
   "skylark-domx-noder",
   "skylark-domx-geom",
   "skylark-domx-query",
-  "Hierarchy"
+  "../Hierarchy"
 ],function(langx,browser,eventer,noder,geom,$,jstree){
 
 	"use strict";
