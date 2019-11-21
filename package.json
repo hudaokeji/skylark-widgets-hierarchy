@@ -35,7 +35,7 @@
   "skylarkjs": {
     "build": {
       "prepare": {
-        "cjstoamd": true
+        "cjstoamd": false
       }
     }
   },
