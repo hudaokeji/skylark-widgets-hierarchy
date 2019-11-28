@@ -166,10 +166,10 @@ define([
 
 			var last_ts = 0, cto = null, ex, ey;
 			this.element
-				.on("init.jstree loading.jstree ready.jstree", $.proxy(function () {
+				.on("init.jstree loading.jstree ready.jstree", langx.proxy(function () {
 						this.get_container_ul().addClass('jstree-contextmenu');
 					}, this))
-				.on("contextmenu.jstree", ".jstree-anchor", $.proxy(function (e, data) {
+				.on("contextmenu.jstree", ".jstree-anchor", langx.proxy(function (e, data) {
 						if (e.target.tagName.toLowerCase() === 'input') {
 							return;
 						}
@@ -185,7 +185,7 @@ define([
 							this.show_contextmenu(e.currentTarget, e.pageX, e.pageY, e);
 						}
 					}, this))
-				.on("click.jstree", ".jstree-anchor", $.proxy(function (e) {
+				.on("click.jstree", ".jstree-anchor", langx.proxy(function (e) {
 						if(this._data.contextmenu.visible && (!last_ts || (+new Date()) - last_ts > 250)) { // work around safari & macOS ctrl+click
 							menu.hide();
 						}
@@ -234,7 +234,7 @@ define([
 					});
 			}
 			*/
-			$(document).on("context_hide.sbswt.popup", $.proxy(function (e, data) {
+			$(document).on("context_hide.sbswt.popup", langx.proxy(function (e, data) {
 				this._data.contextmenu.visible = false;
 				$(data.reference).removeClass('jstree-context');
 			}, this));
@@ -274,12 +274,12 @@ define([
 			}
 
 			i = s.items;
-			if($.isFunction(i)) {
-				i = i.call(this, obj, $.proxy(function (i) {
+			if(langx.isFunction(i)) {
+				i = i.call(this, obj, langx.proxy(function (i) {
 					this._show_contextmenu(obj, x, y, i);
 				}, this));
 			}
-			if($.isPlainObject(i)) {
+			if(langx.isPlainObject(i)) {
 				this._show_contextmenu(obj, x, y, i);
 			}
 		};
@@ -297,7 +297,7 @@ define([
 		this._show_contextmenu = function (obj, x, y, i) {
 			var d = this.get_node(obj, true),
 				a = d.children(".jstree-anchor");
-			$(document).one("context_show.sbswt.popup", $.proxy(function (e, data) {
+			$(document).one("context_show.sbswt.popup", langx.proxy(function (e, data) {
 				var cls = 'jstree-contextmenu jstree-' + this.get_theme() + '-contextmenu';
 				$(data.element).addClass(cls);
 				a.addClass('jstree-context');

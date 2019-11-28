@@ -11,6 +11,10 @@ define([
 
 	var jstree = skylark.jstree =  skylark.jstree || {};
 
+	var ajax = function(options) {
+        return langx.Xhr.request(options.url,options);
+    };
+	/*
 	$.ajax = $.ajax || function(options) {
         return langx.Xhr.request(options.url,options);
     };
@@ -63,7 +67,7 @@ define([
     $.fn.stop = function() {
     	return this;
     }
-
+	*/
 
 	/*!
 	 * jsTree {{VERSION}}
@@ -347,7 +351,7 @@ define([
 		 * a callback called with a single object parameter in the instance's scope when something goes wrong (operation prevented, ajax failed, etc)
 		 * @name $.jstree.defaults.core.error
 		 */
-		error			: $.noop,
+		error			: langx.noop,
 		/**
 		 * the open / close animation duration in milliseconds - set this to `false` to disable the animation (default is `200`)
 		 * @name $.jstree.defaults.core.animation
@@ -561,11 +565,11 @@ define([
 
 			var  opt = options,
 				tmp = this;
-			options = $.extend(true, {}, $.jstree.defaults, options);
+			options = langx.extend(true, {}, $.jstree.defaults, options);
 			if(opt && opt.plugins) {
 				options.plugins = opt.plugins;
 			}
-			$.each(options.plugins, function (i, k) {
+			langx.each(options.plugins, function (i, k) {
 				if(i !== 'core') {
 					tmp = tmp.plugin(k, options[k]);
 				}
@@ -767,7 +771,7 @@ define([
 							}
 						}
 					})
-				.on("mousedown.jstree", $.proxy(function (e) {
+				.on("mousedown.jstree", langx.proxy(function (e) {
 						if(e.target === this.element[0]) {
 							e.preventDefault(); // prevent losing focus when clicking scroll arrows (FF, Chrome)
 							was_click = +(new Date()); // ie does not allow to prevent losing focus
@@ -776,21 +780,21 @@ define([
 				.on("mousedown.jstree", ".jstree-ocl", function (e) {
 						e.preventDefault(); // prevent any node inside from losing focus when clicking the open/close icon
 					})
-				.on("click.jstree", ".jstree-ocl", $.proxy(function (e) {
+				.on("click.jstree", ".jstree-ocl", langx.proxy(function (e) {
 						this.toggle_node(e.target);
 					}, this))
-				.on("dblclick.jstree", ".jstree-anchor", $.proxy(function (e) {
+				.on("dblclick.jstree", ".jstree-anchor", langx.proxy(function (e) {
 						if(e.target.tagName && e.target.tagName.toLowerCase() === "input") { return true; }
 						if(this.settings.core.dblclick_toggle) {
 							this.toggle_node(e.target);
 						}
 					}, this))
-				.on("click.jstree", ".jstree-anchor", $.proxy(function (e) {
+				.on("click.jstree", ".jstree-anchor", langx.proxy(function (e) {
 						e.preventDefault();
 						if(e.currentTarget !== document.activeElement) { $(e.currentTarget).focus(); }
 						this.activate_node(e.currentTarget, e);
 					}, this))
-				.on('keydown.jstree', '.jstree-anchor', $.proxy(function (e) {
+				.on('keydown.jstree', '.jstree-anchor', langx.proxy(function (e) {
 						if(e.target.tagName && e.target.tagName.toLowerCase() === "input") { return true; }
 						if(this._data.core.rtl) {
 							if(e.which === 37) { e.which = 39; }
@@ -804,7 +808,7 @@ define([
 							}
 						}
 					}, this))
-				.on("load_node.jstree", $.proxy(function (e, data) {
+				.on("load_node.jstree", langx.proxy(function (e, data) {
 						if(data.status) {
 							if(data.node.id === $.jstree.root && !this._data.core.loaded) {
 								this._data.core.loaded = true;
@@ -819,7 +823,7 @@ define([
 								this.trigger("loaded");
 							}
 							if(!this._data.core.ready) {
-								setTimeout($.proxy(function() {
+								setTimeout(langx.proxy(function() {
 									if(this.element && !this.get_container_ul().find('.jstree-loading').length) {
 										this._data.core.ready = true;
 										if(this._data.core.selected.length) {
@@ -847,7 +851,7 @@ define([
 						}
 					}, this))
 				// quick searching when the tree is focused
-				.on('keypress.jstree', $.proxy(function (e) {
+				.on('keypress.jstree', langx.proxy(function (e) {
 						if(e.target.tagName && e.target.tagName.toLowerCase() === "input") { return true; }
 						if(tout) { clearTimeout(tout); }
 						tout = setTimeout(function () {
@@ -862,7 +866,7 @@ define([
 
 						// match for whole word from current node down (including the current node)
 						if(word.length > 1) {
-							col.slice(ind).each($.proxy(function (i, v) {
+							col.slice(ind).each(langx.proxy(function (i, v) {
 								if($(v).text().toLowerCase().indexOf(word) === 0) {
 									$(v).focus();
 									end = true;
@@ -872,7 +876,7 @@ define([
 							if(end) { return; }
 
 							// match for whole word from the beginning of the tree
-							col.slice(0, ind).each($.proxy(function (i, v) {
+							col.slice(0, ind).each(langx.proxy(function (i, v) {
 								if($(v).text().toLowerCase().indexOf(word) === 0) {
 									$(v).focus();
 									end = true;
@@ -884,7 +888,7 @@ define([
 						// list nodes that start with that letter (only if word consists of a single char)
 						if(new RegExp('^' + chr.replace(/[-\/\\^$*+?.()|[\]{}]/g, '\\$&') + '+$').test(word)) {
 							// search for the next node starting with that letter
-							col.slice(ind + 1).each($.proxy(function (i, v) {
+							col.slice(ind + 1).each(langx.proxy(function (i, v) {
 								if($(v).text().toLowerCase().charAt(0) === chr) {
 									$(v).focus();
 									end = true;
@@ -894,7 +898,7 @@ define([
 							if(end) { return; }
 
 							// search from the beginning
-							col.slice(0, ind + 1).each($.proxy(function (i, v) {
+							col.slice(0, ind + 1).each(langx.proxy(function (i, v) {
 								if($(v).text().toLowerCase().charAt(0) === chr) {
 									$(v).focus();
 									end = true;
@@ -905,7 +909,7 @@ define([
 						}
 					}, this))
 				// THEME RELATED
-				.on("init.jstree", $.proxy(function () {
+				.on("init.jstree", langx.proxy(function () {
 						var s = this.settings.core.themes;
 						this._data.core.themes.dots			= s.dots;
 						this._data.core.themes.stripes		= s.stripes;
@@ -914,18 +918,18 @@ define([
 						this.set_theme(s.name || "default", s.url);
 						this.set_theme_variant(s.variant);
 					}, this))
-				.on("loading.jstree", $.proxy(function () {
+				.on("loading.jstree", langx.proxy(function () {
 						this[ this._data.core.themes.dots ? "show_dots" : "hide_dots" ]();
 						this[ this._data.core.themes.icons ? "show_icons" : "hide_icons" ]();
 						this[ this._data.core.themes.stripes ? "show_stripes" : "hide_stripes" ]();
 						this[ this._data.core.themes.ellipsis ? "show_ellipsis" : "hide_ellipsis" ]();
 					}, this))
-				.on('blur.jstree', '.jstree-anchor', $.proxy(function (e) {
+				.on('blur.jstree', '.jstree-anchor', langx.proxy(function (e) {
 						this._data.core.focused = null;
 						$(e.currentTarget).filter('.jstree-hovered').mouseleave();
 						this.element.attr('tabindex', '0');
 					}, this))
-				.on('focus.jstree', '.jstree-anchor', $.proxy(function (e) {
+				.on('focus.jstree', '.jstree-anchor', langx.proxy(function (e) {
 						var tmp = this.get_node(e.currentTarget);
 						if(tmp && tmp.id) {
 							this._data.core.focused = tmp.id;
@@ -934,7 +938,7 @@ define([
 						$(e.currentTarget).mouseenter();
 						this.element.attr('tabindex', '-1');
 					}, this))
-				.on('focus.jstree', $.proxy(function () {
+				.on('focus.jstree', langx.proxy(function () {
 						if(+(new Date()) - was_click > 500 && !this._data.core.focused && this.settings.core.restore_focus) {
 							was_click = 0;
 							var act = this.get_node(this.element.attr('aria-activedescendant'), true);
@@ -943,10 +947,10 @@ define([
 							}
 						}
 					}, this))
-				.on('mouseenter.jstree', '.jstree-anchor', $.proxy(function (e) {
+				.on('mouseenter.jstree', '.jstree-anchor', langx.proxy(function (e) {
 						this.hover_node(e.currentTarget);
 					}, this))
-				.on('mouseleave.jstree', '.jstree-anchor', $.proxy(function (e) {
+				.on('mouseleave.jstree', '.jstree-anchor', langx.proxy(function (e) {
 						this.dehover_node(e.currentTarget);
 					}, this));
 		},
@@ -999,7 +1003,7 @@ define([
 		 */
 		get_string : function (key) {
 			var a = this.settings.core.strings;
-			if($.isFunction(a)) { return a.call(this, key); }
+			if(langx.isFunction(a)) { return a.call(this, key); }
 			if(a && a[key]) { return a[key]; }
 			return key;
 		},
@@ -1288,7 +1292,7 @@ define([
 		 */
 		load_node : function (obj, callback) {
 			var k, l, i, j, c;
-			if($.isArray(obj)) {
+			if(langx.isArray(obj)) {
 				this._load_nodes(obj.slice(), callback);
 				return true;
 			}
@@ -1302,7 +1306,7 @@ define([
 				obj.state.loaded = false;
 				for(i = 0, j = obj.parents.length; i < j; i++) {
 					this._model.data[obj.parents[i]].children_d = $.vakata.array_filter(this._model.data[obj.parents[i]].children_d, function (v) {
-						return $.inArray(v, obj.children_d) === -1;
+						return langx.inArray(v, obj.children_d) === -1;
 					});
 				}
 				for(k = 0, l = obj.children_d.length; k < l; k++) {
@@ -1313,7 +1317,7 @@ define([
 				}
 				if (c) {
 					this._data.core.selected = $.vakata.array_filter(this._data.core.selected, function (v) {
-						return $.inArray(v, obj.children_d) === -1;
+						return langx.inArray(v, obj.children_d) === -1;
 					});
 				}
 				obj.children = [];
@@ -1325,7 +1329,7 @@ define([
 			obj.state.failed = false;
 			obj.state.loading = true;
 			this.get_node(obj, true).addClass("jstree-loading").attr('aria-busy',true);
-			this._load_node(obj, $.proxy(function (status) {
+			this._load_node(obj, langx.proxy(function (status) {
 				obj = this._model.data[obj.id];
 				obj.state.loading = false;
 				obj.state.loaded = status;
@@ -1458,13 +1462,13 @@ define([
 				}
 				// return callback.call(this, obj.id === $.jstree.root ? this._append_html_data(obj, this._data.core.original_container_html.clone(true)) : false);
 			}
-			if($.isFunction(s)) {
-				return s.call(this, obj, $.proxy(function (d) {
+			if(langx.isFunction(s)) {
+				return s.call(this, obj, langx.proxy(function (d) {
 					if(d === false) {
 						callback.call(this, false);
 					}
 					else {
-						this[typeof d === 'string' ? '_append_html_data' : '_append_json_data'](obj, typeof d === 'string' ? $($.parseHTML(d)).filter(notTextOrCommentNode) : d, function (status) {
+						this[typeof d === 'string' ? '_append_html_data' : '_append_json_data'](obj, typeof d === 'string' ? $(langx.parseHTML(d)).filter(notTextOrCommentNode) : d, function (status) {
 							callback.call(this, status);
 						});
 					}
@@ -1473,38 +1477,38 @@ define([
 			}
 			if(typeof s === 'object') {
 				if(s.url) {
-					s = $.extend(true, {}, s);
-					if($.isFunction(s.url)) {
+					s = langx.extend(true, {}, s);
+					if(langx.isFunction(s.url)) {
 						s.url = s.url.call(this, obj);
 					}
-					if($.isFunction(s.data)) {
+					if(langx.isFunction(s.data)) {
 						s.data = s.data.call(this, obj);
 					}
-					return $.ajax(s)
-						.done($.proxy(function (d,t,x) {
+					return ajax(s)
+						.done(langx.proxy(function (d,t,x) {
 								var type = x.getResponseHeader('Content-Type');
 								if((type && type.indexOf('json') !== -1) || typeof d === "object") {
 									return this._append_json_data(obj, d, function (status) { callback.call(this, status); });
 									//return callback.call(this, this._append_json_data(obj, d));
 								}
 								if((type && type.indexOf('html') !== -1) || typeof d === "string") {
-									return this._append_html_data(obj, $($.parseHTML(d)).filter(notTextOrCommentNode), function (status) { callback.call(this, status); });
+									return this._append_html_data(obj, $(langx.parseHTML(d)).filter(notTextOrCommentNode), function (status) { callback.call(this, status); });
 									// return callback.call(this, this._append_html_data(obj, $(d)));
 								}
 								this._data.core.last_error = { 'error' : 'ajax', 'plugin' : 'core', 'id' : 'core_04', 'reason' : 'Could not load node', 'data' : JSON.stringify({ 'id' : obj.id, 'xhr' : x }) };
 								this.settings.core.error.call(this, this._data.core.last_error);
 								return callback.call(this, false);
 							}, this))
-						.fail($.proxy(function (f) {
+						.fail(langx.proxy(function (f) {
 								this._data.core.last_error = { 'error' : 'ajax', 'plugin' : 'core', 'id' : 'core_04', 'reason' : 'Could not load node', 'data' : JSON.stringify({ 'id' : obj.id, 'xhr' : f }) };
 								callback.call(this, false);
 								this.settings.core.error.call(this, this._data.core.last_error);
 							}, this));
 				}
-				if ($.isArray(s)) {
-					t = $.extend(true, [], s);
-				} else if ($.isPlainObject(s)) {
-					t = $.extend(true, {}, s);
+				if (langx.isArray(s)) {
+					t = langx.extend(true, [], s);
+				} else if (langx.isPlainObject(s)) {
+					t = langx.extend(true, {}, s);
 				} else {
 					t = s;
 				}
@@ -1522,7 +1526,7 @@ define([
 			}
 			if(typeof s === 'string') {
 				if(obj.id === $.jstree.root) {
-					return this._append_html_data(obj, $($.parseHTML(s)).filter(notTextOrCommentNode), function (status) {
+					return this._append_html_data(obj, $(langx.parseHTML(s)).filter(notTextOrCommentNode), function (status) {
 						callback.call(this, status);
 					});
 				}
@@ -1543,7 +1547,7 @@ define([
 		 */
 		_node_changed : function (obj) {
 			obj = this.get_node(obj);
-      if (obj && $.inArray(obj.id, this._model.changed) === -1) {
+      if (obj && langx.inArray(obj.id, this._model.changed) === -1) {
 				this._model.changed.push(obj.id);
 			}
 		},
@@ -1567,7 +1571,7 @@ define([
 				p = m[par],
 				s = this._data.core.selected.length,
 				tmp, i, j;
-			dat.each($.proxy(function (i, v) {
+			dat.each(langx.proxy(function (i, v) {
 				tmp = this._parse_model_from_html($(v), par, p.parents.concat());
 				if(tmp) {
 					chd.push(tmp);
@@ -1624,7 +1628,7 @@ define([
 					data = JSON.parse(data);
 				}
 			}
-			if(!$.isArray(data)) { data = [data]; }
+			if(!langx.isArray(data)) { data = [data]; }
 			var w = null,
 				args = {
 					'df'	: this._model.default_state,
@@ -1933,13 +1937,13 @@ define([
 						if(r.length !== s.length || $.vakata.array_unique(r.concat(s)).length !== r.length) {
 							// deselect nodes that are no longer selected
 							for(i = 0, j = r.length; i < j; i++) {
-								if($.inArray(r[i], a) === -1 && $.inArray(r[i], s) === -1) {
+								if(langx.inArray(r[i], a) === -1 && langx.inArray(r[i], s) === -1) {
 									m[r[i]].state.selected = false;
 								}
 							}
 							// select nodes that were selected in the mean time
 							for(i = 0, j = s.length; i < j; i++) {
-								if($.inArray(s[i], r) === -1) {
+								if(langx.inArray(s[i], r) === -1) {
 									m[s[i]].state.selected = true;
 								}
 							}
@@ -1977,7 +1981,7 @@ define([
 					if(!this._data.core.working || force_processing) {
 						this._data.core.working = true;
 						w = new window.Worker(this._wrk);
-						w.onmessage = $.proxy(function (e) {
+						w.onmessage = langx.proxy(function (e) {
 							rslt.call(this, e.data, true);
 							try { w.terminate(); w = null; } catch(ignore) { }
 							if(this._data.core.worker_queue.length) {
@@ -2051,8 +2055,8 @@ define([
 				}
 			}
 			tmp = $.vakata.attributes(d, true);
-			$.each(tmp, function (i, v) {
-				v = $.trim(v);
+			langx.each(tmp, function (i, v) {
+				v = langx.trim(v);
 				if(!v.length) { return true; }
 				data.li_attr[i] = v;
 				if(i === 'id') {
@@ -2062,8 +2066,8 @@ define([
 			tmp = d.children('a').first();
 			if(tmp.length) {
 				tmp = $.vakata.attributes(tmp, true);
-				$.each(tmp, function (i, v) {
-					v = $.trim(v);
+				langx.each(tmp, function (i, v) {
+					v = langx.trim(v);
 					if(v.length) {
 						data.a_attr[i] = v;
 					}
@@ -2075,7 +2079,7 @@ define([
 			tmp = $('<div />').html(tmp);
 			data.text = this.settings.core.force_text ? tmp.text() : tmp.html();
 			tmp = d.data();
-			data.data = tmp ? $.extend(true, {}, tmp) : null;
+			data.data = tmp ? langx.extend(true, {}, tmp) : null;
 			data.state.opened = d.hasClass('jstree-open');
 			data.state.selected = d.children('a').hasClass('jstree-clicked');
 			data.state.disabled = d.children('a').hasClass('jstree-disabled');
@@ -2102,7 +2106,7 @@ define([
 			} while(m[tid]);
 			data.id = data.li_attr.id ? data.li_attr.id.toString() : tid;
 			if(tmp.length) {
-				tmp.each($.proxy(function (i, v) {
+				tmp.each(langx.proxy(function (i, v) {
 					c = this._parse_model_from_html($(v), data.id, ps);
 					e = this._model.data[c];
 					data.children.push(c);
@@ -2460,7 +2464,7 @@ define([
 					if(par !== null && (!par || !m[obj.parent].state.opened)) {
 						return false;
 					}
-					ind = $.inArray(obj.id, par === null ? m[$.jstree.root].children : m[obj.parent].children);
+					ind = langx.inArray(obj.id, par === null ? m[$.jstree.root].children : m[obj.parent].children);
 				}
 			}
 			else {
@@ -2516,7 +2520,7 @@ define([
 				}
 			}
 			if(obj.parent !== null && m[obj.parent] && !obj.state.hidden) {
-				i = $.inArray(obj.id, m[obj.parent].children);
+				i = langx.inArray(obj.id, m[obj.parent].children);
 				last_sibling = obj.id;
 				if(i !== -1) {
 					i++;
@@ -2634,7 +2638,7 @@ define([
 			}
 			if(obj.state.opened && !obj.state.loaded) {
 				obj.state.opened = false;
-				setTimeout($.proxy(function () {
+				setTimeout(langx.proxy(function () {
 					this.open_node(obj.id, false, 0);
 				}, this), 0);
 			}
@@ -2650,7 +2654,7 @@ define([
 		 */
 		open_node : function (obj, callback, animation) {
 			var t1, t2, d, t;
-			if($.isArray(obj)) {
+			if(langx.isArray(obj)) {
 				obj = obj.slice();
 				for(t1 = 0, t2 = obj.length; t1 < t2; t1++) {
 					this.open_node(obj[t1], callback, animation);
@@ -2670,7 +2674,7 @@ define([
 			}
 			if(!this.is_loaded(obj)) {
 				if(this.is_loading(obj)) {
-					return setTimeout($.proxy(function () {
+					return setTimeout(langx.proxy(function () {
 						this.open_node(obj, callback, animation);
 					}, this), 500);
 				}
@@ -2768,7 +2772,7 @@ define([
 		 */
 		close_node : function (obj, animation) {
 			var t1, t2, t, d;
-			if($.isArray(obj)) {
+			if(langx.isArray(obj)) {
 				obj = obj.slice();
 				for(t1 = 0, t2 = obj.length; t1 < t2; t1++) {
 					this.close_node(obj[t1], animation);
@@ -2830,7 +2834,7 @@ define([
 		 */
 		toggle_node : function (obj) {
 			var t1, t2;
-			if($.isArray(obj)) {
+			if(langx.isArray(obj)) {
 				obj = obj.slice();
 				for(t1 = 0, t2 = obj.length; t1 < t2; t1++) {
 					this.toggle_node(obj[t1]);
@@ -2931,7 +2935,7 @@ define([
 		 */
 		enable_node : function (obj) {
 			var t1, t2;
-			if($.isArray(obj)) {
+			if(langx.isArray(obj)) {
 				obj = obj.slice();
 				for(t1 = 0, t2 = obj.length; t1 < t2; t1++) {
 					this.enable_node(obj[t1]);
@@ -2960,7 +2964,7 @@ define([
 		 */
 		disable_node : function (obj) {
 			var t1, t2;
-			if($.isArray(obj)) {
+			if(langx.isArray(obj)) {
 				obj = obj.slice();
 				for(t1 = 0, t2 = obj.length; t1 < t2; t1++) {
 					this.disable_node(obj[t1]);
@@ -2999,7 +3003,7 @@ define([
 		 */
 		hide_node : function (obj, skip_redraw) {
 			var t1, t2;
-			if($.isArray(obj)) {
+			if(langx.isArray(obj)) {
 				obj = obj.slice();
 				for(t1 = 0, t2 = obj.length; t1 < t2; t1++) {
 					this.hide_node(obj[t1], true);
@@ -3037,7 +3041,7 @@ define([
 		 */
 		show_node : function (obj, skip_redraw) {
 			var t1, t2;
-			if($.isArray(obj)) {
+			if(langx.isArray(obj)) {
 				obj = obj.slice();
 				for(t1 = 0, t2 = obj.length; t1 < t2; t1++) {
 					this.show_node(obj[t1], true);
@@ -3249,7 +3253,7 @@ define([
 		 */
 		select_node : function (obj, supress_event, prevent_open, e) {
 			var dom, t1, t2, th;
-			if($.isArray(obj)) {
+			if(langx.isArray(obj)) {
 				obj = obj.slice();
 				for(t1 = 0, t2 = obj.length; t1 < t2; t1++) {
 					this.select_node(obj[t1], supress_event, prevent_open, e);
@@ -3302,7 +3306,7 @@ define([
 		 */
 		deselect_node : function (obj, supress_event, e) {
 			var t1, t2, dom;
-			if($.isArray(obj)) {
+			if(langx.isArray(obj)) {
 				obj = obj.slice();
 				for(t1 = 0, t2 = obj.length; t1 < t2; t1++) {
 					this.deselect_node(obj[t1], supress_event, e);
@@ -3407,7 +3411,7 @@ define([
 		 * @return {Array}
 		 */
 		get_selected : function (full) {
-			return full ? $.map(this._data.core.selected, $.proxy(function (i) { return this.get_node(i); }, this)) : this._data.core.selected.slice();
+			return full ? langx.map(this._data.core.selected, langx.proxy(function (i) { return this.get_node(i); }, this)) : this._data.core.selected.slice();
 		},
 		/**
 		 * get an array of all top level selected nodes (ignoring children of selected nodes)
@@ -3434,7 +3438,7 @@ define([
 					tmp.push(i);
 				}
 			}
-			return full ? $.map(tmp, $.proxy(function (i) { return this.get_node(i); }, this)) : tmp;
+			return full ? langx.map(tmp, langx.proxy(function (i) { return this.get_node(i); }, this)) : tmp;
 		},
 		/**
 		 * get an array of all bottom level selected nodes (ignoring selected parents)
@@ -3450,7 +3454,7 @@ define([
 					obj.push(tmp[i].id);
 				}
 			}
-			return full ? $.map(obj, $.proxy(function (i) { return this.get_node(i); }, this)) : obj;
+			return full ? langx.map(obj, langx.proxy(function (i) { return this.get_node(i); }, this)) : obj;
 		},
 		/**
 		 * gets the current state of the tree so that it can be restored later with `set_state(state)`. Used internally.
@@ -3510,7 +3514,7 @@ define([
 				if(state.core) {
 					var res, n, t, _this, i;
 					if(state.core.loaded) {
-						if(!this.settings.core.loaded_state || !$.isArray(state.core.loaded) || !state.core.loaded.length) {
+						if(!this.settings.core.loaded_state || !langx.isArray(state.core.loaded) || !state.core.loaded.length) {
 							delete state.core.loaded;
 							this.set_state(state, callback);
 						}
@@ -3523,7 +3527,7 @@ define([
 						return false;
 					}
 					if(state.core.open) {
-						if(!$.isArray(state.core.open) || !state.core.open.length) {
+						if(!langx.isArray(state.core.open) || !state.core.open.length) {
 							delete state.core.open;
 							this.set_state(state, callback);
 						}
@@ -3553,7 +3557,7 @@ define([
 							state.core.initial_selection === this._data.core.selected.concat([]).sort().join(',')
 						) {
 							this.deselect_all();
-							$.each(state.core.selected, function (i, v) {
+							langx.each(state.core.selected, function (i, v) {
 								_this.select_node(v, false, true);
 							});
 						}
@@ -3563,17 +3567,17 @@ define([
 						return false;
 					}
 					for(i in state) {
-						if(state.hasOwnProperty(i) && i !== "core" && $.inArray(i, this.settings.plugins) === -1) {
+						if(state.hasOwnProperty(i) && i !== "core" && langx.inArray(i, this.settings.plugins) === -1) {
 							delete state[i];
 						}
 					}
-					if($.isEmptyObject(state.core)) {
+					if(langx.isEmptyObject(state.core)) {
 						delete state.core;
 						this.set_state(state, callback);
 						return false;
 					}
 				}
-				if($.isEmptyObject(state)) {
+				if(langx.isEmptyObject(state)) {
 					state = null;
 					if(callback) { callback.call(this); }
 					/**
@@ -3597,7 +3601,7 @@ define([
 		 */
 		refresh : function (skip_loading, forget_state) {
 			this._data.core.state = forget_state === true ? {} : this.get_state();
-			if(forget_state && $.isFunction(forget_state)) { this._data.core.state = forget_state.call(this, this._data.core.state); }
+			if(forget_state && langx.isFunction(forget_state)) { this._data.core.state = forget_state.call(this, this._data.core.state); }
 			this._cnt = 0;
 			this._model.data = {};
 			this._model.data[$.jstree.root] = {
@@ -3623,7 +3627,7 @@ define([
 					if(this._firstChild(this.get_container_ul()[0])) {
 						this.element.attr('aria-activedescendant',this._firstChild(this.get_container_ul()[0]).id);
 					}
-					this.set_state($.extend(true, {}, this._data.core.state), function () {
+					this.set_state(langx.extend(true, {}, this._data.core.state), function () {
 						/**
 						 * triggered when a `refresh` call completes
 						 * @event
@@ -3648,7 +3652,7 @@ define([
 			to_load.push(obj.id);
 			if(obj.state.opened === true) { opened.push(obj.id); }
 			this.get_node(obj, true).find('.jstree-open').each(function() { to_load.push(this.id); opened.push(this.id); });
-			this._load_nodes(to_load, $.proxy(function (nodes) {
+			this._load_nodes(to_load, langx.proxy(function (nodes) {
 				this.open_node(opened, false, 0);
 				this.select_node(s);
 				/**
@@ -3675,18 +3679,18 @@ define([
 			var i, j, m = this._model.data, old = obj.id;
 			id = id.toString();
 			// update parents (replace current ID with new one in children and children_d)
-			m[obj.parent].children[$.inArray(obj.id, m[obj.parent].children)] = id;
+			m[obj.parent].children[langx.inArray(obj.id, m[obj.parent].children)] = id;
 			for(i = 0, j = obj.parents.length; i < j; i++) {
-				m[obj.parents[i]].children_d[$.inArray(obj.id, m[obj.parents[i]].children_d)] = id;
+				m[obj.parents[i]].children_d[langx.inArray(obj.id, m[obj.parents[i]].children_d)] = id;
 			}
 			// update children (replace current ID with new one in parent and parents)
 			for(i = 0, j = obj.children.length; i < j; i++) {
 				m[obj.children[i]].parent = id;
 			}
 			for(i = 0, j = obj.children_d.length; i < j; i++) {
-				m[obj.children_d[i]].parents[$.inArray(obj.id, m[obj.children_d[i]].parents)] = id;
+				m[obj.children_d[i]].parents[langx.inArray(obj.id, m[obj.children_d[i]].parents)] = id;
 			}
-			i = $.inArray(obj.id, this._data.core.selected);
+			i = langx.inArray(obj.id, this._data.core.selected);
 			if(i !== -1) { this._data.core.selected[i] = id; }
 			// update model and obj itself (obj.id, this._model.data[KEY])
 			i = this.get_node(obj.id, true);
@@ -3731,7 +3735,7 @@ define([
 		 */
 		set_text : function (obj, val) {
 			var t1, t2;
-			if($.isArray(obj)) {
+			if(langx.isArray(obj)) {
 				obj = obj.slice();
 				for(t1 = 0, t2 = obj.length; t1 < t2; t1++) {
 					this.set_text(obj[t1], val);
@@ -3776,10 +3780,10 @@ define([
 				'id' : obj.id,
 				'text' : obj.text,
 				'icon' : this.get_icon(obj),
-				'li_attr' : $.extend(true, {}, obj.li_attr),
-				'a_attr' : $.extend(true, {}, obj.a_attr),
+				'li_attr' : langx.extend(true, {}, obj.li_attr),
+				'a_attr' : langx.extend(true, {}, obj.a_attr),
 				'state' : {},
-				'data' : options && options.no_data ? false : $.extend(true, $.isArray(obj.data)?[]:{}, obj.data)
+				'data' : options && options.no_data ? false : langx.extend(true, langx.isArray(obj.data)?[]:{}, obj.data)
 				//( this.get_node(obj, true).length ? this.get_node(obj, true).data() : obj.data ),
 			}, i, j;
 			if(options && options.flat) {
@@ -3850,7 +3854,7 @@ define([
 			if(typeof node === "string") {
 				node = { "text" : node };
 			} else {
-				node = $.extend(true, {}, node);
+				node = langx.extend(true, {}, node);
 			}
 			if(node.text === undefined) { node.text = this.get_string('New node'); }
 			var tmp, dpc, i, j;
@@ -3862,12 +3866,12 @@ define([
 			switch(pos) {
 				case "before":
 					tmp = this.get_node(par.parent);
-					pos = $.inArray(par.id, tmp.children);
+					pos = langx.inArray(par.id, tmp.children);
 					par = tmp;
 					break;
 				case "after" :
 					tmp = this.get_node(par.parent);
-					pos = $.inArray(par.id, tmp.children) + 1;
+					pos = langx.inArray(par.id, tmp.children) + 1;
 					par = tmp;
 					break;
 				case "inside":
@@ -3931,7 +3935,7 @@ define([
 		 */
 		rename_node : function (obj, val) {
 			var t1, t2, old;
-			if($.isArray(obj)) {
+			if(langx.isArray(obj)) {
 				obj = obj.slice();
 				for(t1 = 0, t2 = obj.length; t1 < t2; t1++) {
 					this.rename_node(obj[t1], val);
@@ -3966,7 +3970,7 @@ define([
 		 */
 		delete_node : function (obj) {
 			var t1, t2, par, pos, tmp, i, j, k, l, c, top, lft;
-			if($.isArray(obj)) {
+			if(langx.isArray(obj)) {
 				obj = obj.slice();
 				for(t1 = 0, t2 = obj.length; t1 < t2; t1++) {
 					this.delete_node(obj[t1]);
@@ -3976,7 +3980,7 @@ define([
 			obj = this.get_node(obj);
 			if(!obj || obj.id === $.jstree.root) { return false; }
 			par = this.get_node(obj.parent);
-			pos = $.inArray(obj.id, par.children);
+			pos = langx.inArray(obj.id, par.children);
 			c = false;
 			if(!this.check("delete_node", obj, par, pos)) {
 				this.settings.core.error.call(this, this._data.core.last_error);
@@ -3989,7 +3993,7 @@ define([
 			tmp.push(obj.id);
 			for(i = 0, j = obj.parents.length; i < j; i++) {
 				this._model.data[obj.parents[i]].children_d = $.vakata.array_filter(this._model.data[obj.parents[i]].children_d, function (v) {
-					return $.inArray(v, tmp) === -1;
+					return langx.inArray(v, tmp) === -1;
 				});
 			}
 			for(k = 0, l = tmp.length; k < l; k++) {
@@ -4000,7 +4004,7 @@ define([
 			}
 			if (c) {
 				this._data.core.selected = $.vakata.array_filter(this._data.core.selected, function (v) {
-					return $.inArray(v, tmp) === -1;
+					return langx.inArray(v, tmp) === -1;
 				});
 			}
 			/**
@@ -4017,7 +4021,7 @@ define([
 			for(k = 0, l = tmp.length; k < l; k++) {
 				delete this._model.data[tmp[k]];
 			}
-			if($.inArray(this._data.core.focused, tmp) !== -1) {
+			if(langx.inArray(this._data.core.focused, tmp) !== -1) {
 				this._data.core.focused = null;
 				top = this.element[0].scrollTop;
 				lft = this.element[0].scrollLeft;
@@ -4052,7 +4056,7 @@ define([
 			var tmp = chk.match(/^move_node|copy_node|create_node$/i) ? par : obj,
 				chc = this.settings.core.check_callback;
 			if(chk === "move_node" || chk === "copy_node") {
-				if((!more || !more.is_multi) && (obj.id === par.id || (chk === "move_node" && $.inArray(obj.id, par.children) === pos) || $.inArray(par.id, obj.children_d) !== -1)) {
+				if((!more || !more.is_multi) && (obj.id === par.id || (chk === "move_node" && langx.inArray(obj.id, par.children) === pos) || langx.inArray(par.id, obj.children_d) !== -1)) {
 					this._data.core.last_error = { 'error' : 'check', 'plugin' : 'core', 'id' : 'core_01', 'reason' : 'Moving parent inside child', 'data' : JSON.stringify({ 'chk' : chk, 'pos' : pos, 'obj' : obj && obj.id ? obj.id : false, 'par' : par && par.id ? par.id : false }) };
 					return false;
 				}
@@ -4064,7 +4068,7 @@ define([
 				}
 				return tmp.functions[chk];
 			}
-			if(chc === false || ($.isFunction(chc) && chc.call(this, chk, obj, par, pos, more) === false) || (chc && chc[chk] === false)) {
+			if(chc === false || (langx.isFunction(chc) && chc.call(this, chk, obj, par, pos, more) === false) || (chc && chc[chk] === false)) {
 				this._data.core.last_error = { 'error' : 'check', 'plugin' : 'core', 'id' : 'core_03', 'reason' : 'User config for core.check_callback prevents function: ' + chk, 'data' : JSON.stringify({ 'chk' : chk, 'pos' : pos, 'obj' : obj && obj.id ? obj.id : false, 'par' : par && par.id ? par.id : false }) };
 				return false;
 			}
@@ -4100,7 +4104,7 @@ define([
 				return this.load_node(par, function () { this.move_node(obj, par, pos, callback, true, false, origin); });
 			}
 
-			if($.isArray(obj)) {
+			if(langx.isArray(obj)) {
 				if(obj.length === 1) {
 					obj = obj[0];
 				}
@@ -4124,7 +4128,7 @@ define([
 			new_par = (!pos.toString().match(/^(before|after)$/) || par.id === $.jstree.root) ? par : this.get_node(par.parent);
 			old_ins = origin ? origin : (this._model.data[obj.id] ? this : $.jstree.reference(obj.id));
 			is_multi = !old_ins || !old_ins._id || (this._id !== old_ins._id);
-			old_pos = old_ins && old_ins._id && old_par && old_ins._model.data[old_par] && old_ins._model.data[old_par].children ? $.inArray(obj.id, old_ins._model.data[old_par].children) : -1;
+			old_pos = old_ins && old_ins._id && old_par && old_ins._model.data[old_par] && old_ins._model.data[old_par].children ? langx.inArray(obj.id, old_ins._model.data[old_par].children) : -1;
 			if(old_ins && old_ins._id) {
 				obj = old_ins._model.data[obj.id];
 			}
@@ -4143,10 +4147,10 @@ define([
 			}
 			switch(pos) {
 				case "before":
-					pos = $.inArray(par.id, new_par.children);
+					pos = langx.inArray(par.id, new_par.children);
 					break;
 				case "after" :
-					pos = $.inArray(par.id, new_par.children) + 1;
+					pos = langx.inArray(par.id, new_par.children) + 1;
 					break;
 				case "inside":
 				case "first":
@@ -4166,7 +4170,7 @@ define([
 			}
 			if(obj.parent === new_par.id) {
 				dpc = new_par.children.concat();
-				tmp = $.inArray(obj.id, dpc);
+				tmp = langx.inArray(obj.id, dpc);
 				if(tmp !== -1) {
 					dpc = $.vakata.array_remove(dpc, tmp);
 					if(pos > tmp) { pos--; }
@@ -4188,7 +4192,7 @@ define([
 					dpc = [];
 					p = old_ins._model.data[obj.parents[i]].children_d;
 					for(k = 0, l = p.length; k < l; k++) {
-						if($.inArray(p[k], tmp) === -1) {
+						if(langx.inArray(p[k], tmp) === -1) {
 							dpc.push(p[k]);
 						}
 					}
@@ -4273,7 +4277,7 @@ define([
 				return this.load_node(par, function () { this.copy_node(obj, par, pos, callback, true, false, origin); });
 			}
 
-			if($.isArray(obj)) {
+			if(langx.isArray(obj)) {
 				if(obj.length === 1) {
 					obj = obj[0];
 				}
@@ -4307,10 +4311,10 @@ define([
 			}
 			switch(pos) {
 				case "before":
-					pos = $.inArray(par.id, new_par.children);
+					pos = langx.inArray(par.id, new_par.children);
 					break;
 				case "after" :
-					pos = $.inArray(par.id, new_par.children) + 1;
+					pos = langx.inArray(par.id, new_par.children) + 1;
 					break;
 				case "inside":
 				case "first":
@@ -4377,7 +4381,7 @@ define([
 			 * @param {jsTree} old_instance the instance the node came from
 			 * @param {jsTree} new_instance the instance of the new parent
 			 */
-			this.trigger('copy_node', { "node" : tmp, "original" : obj, "parent" : new_par.id, "position" : pos, "old_parent" : old_par, "old_position" : old_ins && old_ins._id && old_par && old_ins._model.data[old_par] && old_ins._model.data[old_par].children ? $.inArray(obj.id, old_ins._model.data[old_par].children) : -1,'is_multi' : (old_ins && old_ins._id && old_ins._id !== this._id), 'is_foreign' : (!old_ins || !old_ins._id), 'old_instance' : old_ins, 'new_instance' : this });
+			this.trigger('copy_node', { "node" : tmp, "original" : obj, "parent" : new_par.id, "position" : pos, "old_parent" : old_par, "old_position" : old_ins && old_ins._id && old_par && old_ins._model.data[old_par] && old_ins._model.data[old_par].children ? langx.inArray(obj.id, old_ins._model.data[old_par].children) : -1,'is_multi' : (old_ins && old_ins._id && old_ins._id !== this._id), 'is_foreign' : (!old_ins || !old_ins._id), 'old_instance' : old_ins, 'new_instance' : this });
 			return tmp.id;
 		},
 		/**
@@ -4388,7 +4392,7 @@ define([
 		 */
 		cut : function (obj) {
 			if(!obj) { obj = this._data.core.selected.concat(); }
-			if(!$.isArray(obj)) { obj = [obj]; }
+			if(!langx.isArray(obj)) { obj = [obj]; }
 			if(!obj.length) { return false; }
 			var tmp = [], o, t1, t2;
 			for(t1 = 0, t2 = obj.length; t1 < t2; t1++) {
@@ -4415,7 +4419,7 @@ define([
 		 */
 		copy : function (obj) {
 			if(!obj) { obj = this._data.core.selected.concat(); }
-			if(!$.isArray(obj)) { obj = [obj]; }
+			if(!langx.isArray(obj)) { obj = [obj]; }
 			if(!obj.length) { return false; }
 			var tmp = [], o, t1, t2;
 			for(t1 = 0, t2 = obj.length; t1 < t2; t1++) {
@@ -4538,7 +4542,7 @@ define([
 							"lineHeight" : (this._data.core.li_height) + "px",
 							"width" : "150px" // will be set a bit further down
 						},
-						"blur" : $.proxy(function (e) {
+						"blur" : langx.proxy(function (e) {
 							e.stopImmediatePropagation();
 							e.preventDefault();
 							var i = s.children(".jstree-rename-input"),
@@ -4549,14 +4553,14 @@ define([
 							h1.remove();
 							s.replaceWith(a);
 							s.remove();
-							t = f ? t : $('<div></div>').append($.parseHTML(t)).html();
+							t = f ? t : $('<div></div>').append(langx.parseHTML(t)).html();
 							this.set_text(obj, t);
-							nv = !!this.rename_node(obj, f ? $('<div></div>').text(v).text() : $('<div></div>').append($.parseHTML(v)).html());
+							nv = !!this.rename_node(obj, f ? $('<div></div>').text(v).text() : $('<div></div>').append(langx.parseHTML(v)).html());
 							if(!nv) {
 								this.set_text(obj, t); // move this up? and fix #483
 							}
 							this._data.core.focused = tmp.id;
-							setTimeout($.proxy(function () {
+							setTimeout(langx.proxy(function () {
 								var node = this.get_node(tmp.id, true);
 								if(node.length) {
 									this._data.core.focused = tmp.id;
@@ -4627,7 +4631,7 @@ define([
 				if(!dir) { dir = $.jstree.path + '/themes'; }
 				theme_url = dir + '/' + theme_name + '/style.css';
 			}
-			if(theme_url && $.inArray(theme_url, themes_loaded) === -1) {
+			if(theme_url && langx.inArray(theme_url, themes_loaded) === -1) {
 				$('head').append('<'+'link rel="stylesheet" href="' + theme_url + '" type="text/css" />');
 				themes_loaded.push(theme_url);
 			}
@@ -4811,7 +4815,7 @@ define([
 		 */
 		set_icon : function (obj, icon) {
 			var t1, t2, dom, old;
-			if($.isArray(obj)) {
+			if(langx.isArray(obj)) {
 				obj = obj.slice();
 				for(t1 = 0, t2 = obj.length; t1 < t2; t1++) {
 					this.set_icon(obj[t1], icon);
@@ -4860,7 +4864,7 @@ define([
 		 */
 		hide_icon : function (obj) {
 			var t1, t2;
-			if($.isArray(obj)) {
+			if(langx.isArray(obj)) {
 				obj = obj.slice();
 				for(t1 = 0, t2 = obj.length; t1 < t2; t1++) {
 					this.hide_icon(obj[t1]);
@@ -4880,7 +4884,7 @@ define([
 		 */
 		show_icon : function (obj) {
 			var t1, t2, dom;
-			if($.isArray(obj)) {
+			if(langx.isArray(obj)) {
 				obj = obj.slice();
 				for(t1 = 0, t2 = obj.length; t1 < t2; t1++) {
 					this.show_icon(obj[t1]);
@@ -5021,9 +5025,9 @@ define([
 		node = $(node)[0];
 		var attr = with_values ? {} : [];
 		if(node && node.attributes) {
-			$.each(node.attributes, function (i, v) {
-				if($.inArray(v.name.toLowerCase(),['style','contenteditable','hasfocus','tabindex']) !== -1) { return; }
-				if(v.value !== null && $.trim(v.value) !== '') {
+			langx.each(node.attributes, function (i, v) {
+				if(langx.inArray(v.name.toLowerCase(),['style','contenteditable','hasfocus','tabindex']) !== -1) { return; }
+				if(v.value !== null && langx.trim(v.value) !== '') {
 					if(with_values) { attr[v.name] = v.value; }
 					else { attr.push(v.name); }
 				}
@@ -5052,7 +5056,7 @@ define([
 	};
 	// remove item from array
 	$.vakata.array_remove_item = function(array, item) {
-		var tmp = $.inArray(item, array);
+		var tmp = langx.inArray(item, array);
 		return tmp !== -1 ? $.vakata.array_remove(array, tmp) : array;
 	};
 	$.vakata.array_filter = function(c,a,b,d,e) {

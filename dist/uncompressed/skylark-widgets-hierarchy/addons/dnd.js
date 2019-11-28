@@ -97,7 +97,7 @@ define([
 			parent.bind.call(this);
 
 			this.element
-				.on(this.settings.dnd.use_html5 ? 'dragstart.jstree' : 'mousedown.jstree touchstart.jstree', this.settings.dnd.large_drag_target ? '.jstree-node' : '.jstree-anchor', $.proxy(function (e) {
+				.on(this.settings.dnd.use_html5 ? 'dragstart.jstree' : 'mousedown.jstree touchstart.jstree', this.settings.dnd.large_drag_target ? '.jstree-node' : '.jstree-anchor', langx.proxy(function (e) {
 						if(this.settings.dnd.large_drag_target && $(e.target).closest('.jstree-node')[0] !== e.currentTarget) {
 							return true;
 						}
@@ -111,7 +111,7 @@ define([
 							txt = $.vakata.html.escape(txt);
 						}
 						if(obj && obj.id && obj.id !== $.jstree.root && (e.which === 1 || e.type === "touchstart" || e.type === "dragstart") &&
-							(this.settings.dnd.is_draggable === true || ($.isFunction(this.settings.dnd.is_draggable) && this.settings.dnd.is_draggable.call(this, (mlt > 1 ? this.get_top_selected(true) : [obj]), e)))
+							(this.settings.dnd.is_draggable === true || (langx.isFunction(this.settings.dnd.is_draggable) && this.settings.dnd.is_draggable.call(this, (mlt > 1 ? this.get_top_selected(true) : [obj]), e)))
 						) {
 							drg = { 'jstree' : true, 'origin' : this, 'obj' : this.get_node(obj,true), 'nodes' : mlt > 1 ? this.get_top_selected() : [obj.id] };
 							elm = e.currentTarget;
@@ -135,7 +135,7 @@ define([
 					//		$.vakata.dnd._trigger('move', e, { 'helper': $(), 'element': elm, 'data': drg });
 					//		return false;
 					//	}, this))
-					.on('drop.jstree', $.proxy(function (e) {
+					.on('drop.jstree', langx.proxy(function (e) {
 							e.preventDefault();
 							$.vakata.dnd._trigger('stop', e, { 'helper': $(), 'element': elm, 'data': drg });
 							return false;
@@ -241,7 +241,7 @@ define([
 							else {
 								o = rel > h / 2 ? ['i', 'a', 'b'] : ['i', 'b', 'a'];
 							}
-							$.each(o, function (j, v) {
+							langx.each(o, function (j, v) {
 								switch(v) {
 									case 'b':
 										l = off.left - 6;
@@ -270,7 +270,7 @@ define([
 									ps = i;
 									if(op === "move_node" && v === 'a' && (data.data.origin && data.data.origin === ins) && p === ins.get_parent(data.data.nodes[t1])) {
 										pr = ins.get_node(p);
-										if(ps > $.inArray(data.data.nodes[t1], pr.children)) {
+										if(ps > langx.inArray(data.data.nodes[t1], pr.children)) {
 											ps -= 1;
 										}
 									}
@@ -377,7 +377,7 @@ define([
 				return $.vakata.html.div.text(str).html();
 			},
 			strip : function (str) {
-				return $.vakata.html.div.empty().append($.parseHTML(str)).text();
+				return $.vakata.html.div.empty().append(langx.parseHTML(str)).text();
 			}
 		};
 		// private variable

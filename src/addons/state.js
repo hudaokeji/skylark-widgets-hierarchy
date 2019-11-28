@@ -53,10 +53,10 @@ define([
 	$.jstree.plugins.state = function (options, parent) {
 		this.bind = function () {
 			parent.bind.call(this);
-			var bind = $.proxy(function () {
-				this.element.on(this.settings.state.events, $.proxy(function () {
+			var bind = langx.proxy(function () {
+				this.element.on(this.settings.state.events, langx.proxy(function () {
 					if(to) { clearTimeout(to); }
-					to = setTimeout($.proxy(function () { this.save_state(); }, this), 100);
+					to = setTimeout(langx.proxy(function () { this.save_state(); }, this), 100);
 				}, this));
 				/**
 				 * triggered when the state plugin is finished restoring the state (and immediately after ready if there is no state to restore).
@@ -67,7 +67,7 @@ define([
 				this.trigger('state_ready');
 			}, this);
 			this.element
-				.on("ready.jstree", $.proxy(function (e, data) {
+				.on("ready.jstree", langx.proxy(function (e, data) {
 						this.element.one("restore_state.jstree", bind);
 						if(!this.restore_state()) { bind(); }
 					}, this));
@@ -95,12 +95,12 @@ define([
 			if(!!k) { try { k = JSON.parse(k); } catch(ex) { return false; } }
 			if(!!k && k.ttl && k.sec && +(new Date()) - k.sec > k.ttl) { return false; }
 			if(!!k && k.state) { k = k.state; }
-			if(!!k && $.isFunction(this.settings.state.filter)) { k = this.settings.state.filter.call(this, k); }
+			if(!!k && langx.isFunction(this.settings.state.filter)) { k = this.settings.state.filter.call(this, k); }
 			if(!!k) {
 				if (!this.settings.state.preserve_loaded) {
 					delete k.core.loaded;
 				}
-				this.element.one("set_state.jstree", function (e, data) { data.instance.trigger('restore_state', { 'state' : $.extend(true, {}, k) }); });
+				this.element.one("set_state.jstree", function (e, data) { data.instance.trigger('restore_state', { 'state' : langx.extend(true, {}, k) }); });
 				this.set_state(k);
 				return true;
 			}

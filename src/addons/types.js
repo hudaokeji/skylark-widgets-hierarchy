@@ -57,7 +57,7 @@ define([
 		};
 		this.bind = function () {
 			this.element
-				.on('model.jstree', $.proxy(function (e, data) {
+				.on('model.jstree', langx.proxy(function (e, data) {
 						var m = this._model.data,
 							dpc = data.nodes,
 							t = this.settings.types,
@@ -115,10 +115,10 @@ define([
 		this.get_json = function (obj, options, flat) {
 			var i, j,
 				m = this._model.data,
-				opt = options ? $.extend(true, {}, options, {no_id:false}) : {},
+				opt = options ? langx.extend(true, {}, options, {no_id:false}) : {},
 				tmp = parent.get_json.call(this, obj, opt, flat);
 			if(tmp === false) { return false; }
-			if($.isArray(tmp)) {
+			if(langx.isArray(tmp)) {
 				for(i = 0, j = tmp.length; i < j; i++) {
 					tmp[i].type = tmp[i].id && m[tmp[i].id] && m[tmp[i].id].type ? m[tmp[i].id].type : "default";
 					if(options && options.no_id) {
@@ -141,7 +141,7 @@ define([
 			return tmp;
 		};
 		this._delete_ids = function (tmp) {
-			if($.isArray(tmp)) {
+			if(langx.isArray(tmp)) {
 				for(var i = 0, j = tmp.length; i < j; i++) {
 					tmp[i] = this._delete_ids(tmp[i]);
 				}
@@ -154,7 +154,7 @@ define([
 			if(tmp.a_attr && tmp.a_attr.id) {
 				delete tmp.a_attr.id;
 			}
-			if(tmp.children && $.isArray(tmp.children)) {
+			if(tmp.children && langx.isArray(tmp.children)) {
 				tmp.children = this._delete_ids(tmp.children);
 			}
 			return tmp;
@@ -169,13 +169,13 @@ define([
 				case "create_node":
 				case "move_node":
 				case "copy_node":
-					if(chk !== 'move_node' || $.inArray(obj.id, par.children) === -1) {
+					if(chk !== 'move_node' || langx.inArray(obj.id, par.children) === -1) {
 						tmp = this.get_rules(par);
 						if(tmp.max_children !== undefined && tmp.max_children !== -1 && tmp.max_children === par.children.length) {
 							this._data.core.last_error = { 'error' : 'check', 'plugin' : 'types', 'id' : 'types_01', 'reason' : 'max_children prevents function: ' + chk, 'data' : JSON.stringify({ 'chk' : chk, 'pos' : pos, 'obj' : obj && obj.id ? obj.id : false, 'par' : par && par.id ? par.id : false }) };
 							return false;
 						}
-						if(tmp.valid_children !== undefined && tmp.valid_children !== -1 && $.inArray((obj.type || 'default'), tmp.valid_children) === -1) {
+						if(tmp.valid_children !== undefined && tmp.valid_children !== -1 && langx.inArray((obj.type || 'default'), tmp.valid_children) === -1) {
 							this._data.core.last_error = { 'error' : 'check', 'plugin' : 'types', 'id' : 'types_02', 'reason' : 'valid_children prevents function: ' + chk, 'data' : JSON.stringify({ 'chk' : chk, 'pos' : pos, 'obj' : obj && obj.id ? obj.id : false, 'par' : par && par.id ? par.id : false }) };
 							return false;
 						}
@@ -227,7 +227,7 @@ define([
 		 */
 		this.get_type = function (obj, rules) {
 			obj = this.get_node(obj);
-			return (!obj) ? false : ( rules ? $.extend({ 'type' : obj.type }, this.settings.types[obj.type]) : obj.type);
+			return (!obj) ? false : ( rules ? langx.extend({ 'type' : obj.type }, this.settings.types[obj.type]) : obj.type);
 		};
 		/**
 		 * used to change a node's type
@@ -238,7 +238,7 @@ define([
 		 */
 		this.set_type = function (obj, type) {
 			var m = this._model.data, t, t1, t2, old_type, old_icon, k, d, a;
-			if($.isArray(obj)) {
+			if(langx.isArray(obj)) {
 				obj = obj.slice();
 				for(t1 = 0, t2 = obj.length; t1 < t2; t1++) {
 					this.set_type(obj[t1], type);

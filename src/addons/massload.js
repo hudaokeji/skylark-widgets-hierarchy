@@ -54,8 +54,8 @@ define([
 				}
 				this._data.massload = {};
 				if (toLoad.length) {
-					if($.isFunction(s)) {
-						return s.call(this, toLoad, $.proxy(function (data) {
+					if(langx.isFunction(s)) {
+						return s.call(this, toLoad, langx.proxy(function (data) {
 							var i, j;
 							if(data) {
 								for(i in data) {
@@ -74,15 +74,15 @@ define([
 						}, this));
 					}
 					if(typeof s === 'object' && s && s.url) {
-						s = $.extend(true, {}, s);
-						if($.isFunction(s.url)) {
+						s = langx.extend(true, {}, s);
+						if(langx.isFunction(s.url)) {
 							s.url = s.url.call(this, toLoad);
 						}
-						if($.isFunction(s.data)) {
+						if(langx.isFunction(s.data)) {
 							s.data = s.data.call(this, toLoad);
 						}
-						return $.ajax(s)
-							.done($.proxy(function (data,t,x) {
+						return ajax(s)
+							.done(langx.proxy(function (data,t,x) {
 									var i, j;
 									if(data) {
 										for(i in data) {
@@ -99,7 +99,7 @@ define([
 									}
 									parent._load_nodes.call(this, nodes, callback, is_callback, force_reload);
 								}, this))
-							.fail($.proxy(function (f) {
+							.fail(langx.proxy(function (f) {
 									parent._load_nodes.call(this, nodes, callback, is_callback, force_reload);
 								}, this));
 					}
@@ -113,7 +113,7 @@ define([
 			if(data) {
 				rslt = this[typeof data === 'string' ? '_append_html_data' : '_append_json_data'](
 					obj,
-					typeof data === 'string' ? $($.parseHTML(data)).filter(function () { return this.nodeType !== 3; }) : data,
+					typeof data === 'string' ? $(langx.parseHTML(data)).filter(function () { return this.nodeType !== 3; }) : data,
 					function (status) { callback.call(this, status); }
 				);
 				dom = this.get_node(obj.id, true);

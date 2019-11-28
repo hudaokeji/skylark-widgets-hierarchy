@@ -82,7 +82,7 @@ define([
 				this.settings.checkbox.cascade = 'up+down+undetermined';
 			}
 			this.element
-				.on("init.jstree", $.proxy(function () {
+				.on("init.jstree", langx.proxy(function () {
 						this._data.checkbox.visible = this.settings.checkbox.visible;
 						if(!this.settings.checkbox.keep_selected_style) {
 							this.element.addClass('jstree-checkbox-no-clicked');
@@ -91,20 +91,20 @@ define([
 							this.element.addClass('jstree-checkbox-selection');
 						}
 					}, this))
-				.on("loading.jstree", $.proxy(function () {
+				.on("loading.jstree", langx.proxy(function () {
 						this[ this._data.checkbox.visible ? 'show_checkboxes' : 'hide_checkboxes' ]();
 					}, this));
 			if(this.settings.checkbox.cascade.indexOf('undetermined') !== -1) {
 				this.element
-					.on('changed.jstree uncheck_node.jstree check_node.jstree uncheck_all.jstree check_all.jstree move_node.jstree copy_node.jstree redraw.jstree open_node.jstree', $.proxy(function () {
+					.on('changed.jstree uncheck_node.jstree check_node.jstree uncheck_all.jstree check_all.jstree move_node.jstree copy_node.jstree redraw.jstree open_node.jstree', langx.proxy(function () {
 							// only if undetermined is in setting
 							if(this._data.checkbox.uto) { clearTimeout(this._data.checkbox.uto); }
-							this._data.checkbox.uto = setTimeout($.proxy(this._undetermined, this), 50);
+							this._data.checkbox.uto = setTimeout(langx.proxy(this._undetermined, this), 50);
 						}, this));
 			}
 			if(!this.settings.checkbox.tie_selection) {
 				this.element
-					.on('model.jstree', $.proxy(function (e, data) {
+					.on('model.jstree', langx.proxy(function (e, data) {
 						var m = this._model.data,
 							p = m[data.parent],
 							dpc = data.nodes,
@@ -119,7 +119,7 @@ define([
 			}
 			if(this.settings.checkbox.cascade.indexOf('up') !== -1 || this.settings.checkbox.cascade.indexOf('down') !== -1) {
 				this.element
-					.on('model.jstree', $.proxy(function (e, data) {
+					.on('model.jstree', langx.proxy(function (e, data) {
 							var m = this._model.data,
 								p = m[data.parent],
 								dpc = data.nodes,
@@ -180,7 +180,7 @@ define([
 
 							this._data[ t ? 'core' : 'checkbox' ].selected = $.vakata.array_unique(this._data[ t ? 'core' : 'checkbox' ].selected);
 						}, this))
-					.on(this.settings.checkbox.tie_selection ? 'select_node.jstree' : 'check_node.jstree', $.proxy(function (e, data) {
+					.on(this.settings.checkbox.tie_selection ? 'select_node.jstree' : 'check_node.jstree', langx.proxy(function (e, data) {
 							var self = this,
 								obj = data.node,
 								m = this._model.data,
@@ -238,7 +238,7 @@ define([
 							}
 							this._data[ t ? 'core' : 'checkbox' ].selected = cur;
 						}, this))
-					.on(this.settings.checkbox.tie_selection ? 'deselect_all.jstree' : 'uncheck_all.jstree', $.proxy(function (e, data) {
+					.on(this.settings.checkbox.tie_selection ? 'deselect_all.jstree' : 'uncheck_all.jstree', langx.proxy(function (e, data) {
 							var obj = this.get_node($.jstree.root),
 								m = this._model.data,
 								i, j, tmp;
@@ -249,7 +249,7 @@ define([
 								}
 							}
 						}, this))
-					.on(this.settings.checkbox.tie_selection ? 'deselect_node.jstree' : 'uncheck_node.jstree', $.proxy(function (e, data) {
+					.on(this.settings.checkbox.tie_selection ? 'deselect_node.jstree' : 'uncheck_node.jstree', langx.proxy(function (e, data) {
 							var self = this,
 								obj = data.node,
 								dom = this.get_node(obj, true),
@@ -292,7 +292,7 @@ define([
 			}
 			if(this.settings.checkbox.cascade.indexOf('up') !== -1) {
 				this.element
-					.on('delete_node.jstree', $.proxy(function (e, data) {
+					.on('delete_node.jstree', langx.proxy(function (e, data) {
 							// apply up (whole handler)
 							var p = this.get_node(data.parent),
 								m = this._model.data,
@@ -316,7 +316,7 @@ define([
 								p = this.get_node(p.parent);
 							}
 						}, this))
-					.on('move_node.jstree', $.proxy(function (e, data) {
+					.on('move_node.jstree', langx.proxy(function (e, data) {
 							// apply up (whole handler)
 							var is_multi = data.is_multi,
 								old_par = data.old_parent,
@@ -486,7 +486,7 @@ define([
 			}
 			if(!is_callback && this.settings.checkbox.cascade.indexOf('undetermined') !== -1) {
 				if(this._data.checkbox.uto) { clearTimeout(this._data.checkbox.uto); }
-				this._data.checkbox.uto = setTimeout($.proxy(this._undetermined, this), 50);
+				this._data.checkbox.uto = setTimeout(langx.proxy(this._undetermined, this), 50);
 			}
 			return obj;
 		};
@@ -524,7 +524,7 @@ define([
 				return true;
 			}
 			for(i = 0, j = obj.children_d.length; i < j; i++) {
-				if($.inArray(obj.children_d[i], d) !== -1 || (!m[obj.children_d[i]].state.loaded && m[obj.children_d[i]].original.state.undetermined)) {
+				if(langx.inArray(obj.children_d[i], d) !== -1 || (!m[obj.children_d[i]].state.loaded && m[obj.children_d[i]].original.state.undetermined)) {
 					return true;
 				}
 			}
@@ -539,7 +539,7 @@ define([
 		 */
 		this.disable_checkbox = function (obj) {
 			var t1, t2, dom;
-			if($.isArray(obj)) {
+			if(langx.isArray(obj)) {
 				obj = obj.slice();
 				for(t1 = 0, t2 = obj.length; t1 < t2; t1++) {
 					this.disable_checkbox(obj[t1]);
@@ -575,7 +575,7 @@ define([
 		 */
 		this.enable_checkbox = function (obj) {
 			var t1, t2, dom;
-			if($.isArray(obj)) {
+			if(langx.isArray(obj)) {
 				obj = obj.slice();
 				for(t1 = 0, t2 = obj.length; t1 < t2; t1++) {
 					this.enable_checkbox(obj[t1]);
@@ -723,7 +723,7 @@ define([
 		this.check_node = function (obj, e) {
 			if(this.settings.checkbox.tie_selection) { return this.select_node(obj, false, true, e); }
 			var dom, t1, t2, th;
-			if($.isArray(obj)) {
+			if(langx.isArray(obj)) {
 				obj = obj.slice();
 				for(t1 = 0, t2 = obj.length; t1 < t2; t1++) {
 					this.check_node(obj[t1], e);
@@ -763,7 +763,7 @@ define([
 		this.uncheck_node = function (obj, e) {
 			if(this.settings.checkbox.tie_selection) { return this.deselect_node(obj, false, e); }
 			var t1, t2, dom;
-			if($.isArray(obj)) {
+			if(langx.isArray(obj)) {
 				obj = obj.slice();
 				for(t1 = 0, t2 = obj.length; t1 < t2; t1++) {
 					this.uncheck_node(obj[t1], e);
@@ -867,7 +867,7 @@ define([
 		 */
 		this.get_checked = function (full) {
 			if(this.settings.checkbox.tie_selection) { return this.get_selected(full); }
-			return full ? $.map(this._data.checkbox.selected, $.proxy(function (i) { return this.get_node(i); }, this)) : this._data.checkbox.selected;
+			return full ? langx.map(this._data.checkbox.selected, langx.proxy(function (i) { return this.get_node(i); }, this)) : this._data.checkbox.selected;
 		};
 		/**
 		 * get an array of all top level checked nodes (ignoring children of checked nodes) (if tie_selection is on in the settings this function will return the same as get_top_selected)
@@ -896,7 +896,7 @@ define([
 					tmp.push(i);
 				}
 			}
-			return full ? $.map(tmp, $.proxy(function (i) { return this.get_node(i); }, this)) : tmp;
+			return full ? langx.map(tmp, langx.proxy(function (i) { return this.get_node(i); }, this)) : tmp;
 		};
 		/**
 		 * get an array of all bottom level checked nodes (ignoring selected parents) (if tie_selection is on in the settings this function will return the same as get_bottom_selected)
@@ -914,11 +914,11 @@ define([
 					obj.push(tmp[i].id);
 				}
 			}
-			return full ? $.map(obj, $.proxy(function (i) { return this.get_node(i); }, this)) : obj;
+			return full ? langx.map(obj, langx.proxy(function (i) { return this.get_node(i); }, this)) : obj;
 		};
 		this.load_node = function (obj, callback) {
 			var k, l, i, j, c, tmp;
-			if(!$.isArray(obj) && !this.settings.checkbox.tie_selection) {
+			if(!langx.isArray(obj) && !this.settings.checkbox.tie_selection) {
 				tmp = this.get_node(obj);
 				if(tmp && tmp.state.loaded) {
 					for(k = 0, l = tmp.children_d.length; k < l; k++) {
@@ -943,7 +943,7 @@ define([
 				if(!this.settings.checkbox.tie_selection) {
 					this.uncheck_all();
 					var _this = this;
-					$.each(state.checkbox, function (i, v) {
+					langx.each(state.checkbox, function (i, v) {
 						_this.check_node(v);
 					});
 				}

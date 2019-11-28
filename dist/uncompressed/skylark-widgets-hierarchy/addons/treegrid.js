@@ -24,7 +24,7 @@ define([
             return ("jstree_" + tree + "_grid_" + escapeId(id) + "_col");
         },
         getIds = function(nodes) {
-            return $.makeArray(nodes.map(function() {
+            return langx.makeArray(nodes.map(function() {
                 return this.id;
             }));
         },
@@ -103,7 +103,7 @@ define([
 
         copyData = function(fromtree, from, totree, to, recurse) {
             var i, j;
-            to.data = $.extend(true, {}, from.data);
+            to.data = langx.extend(true, {}, from.data);
             if (from && from.children_d && recurse) {
                 for (i = 0, j = from.children_d.length; i < j; i++) {
                     copyData(fromtree, fromtree.get_node(from.children_d[i]), totree, totree.get_node(to.children_d[i]), recurse);
@@ -293,7 +293,7 @@ define([
                 }
 
                 // copy original sort function
-                var defaultSort = $.proxy(this.settings.sort, this);
+                var defaultSort = langx.proxy(this.settings.sort, this);
 
                 // override sort function
                 this.settings.sort = function(a, b) {
@@ -460,14 +460,14 @@ define([
             parent.bind.call(this);
             this._initialize();
             this.element
-                .on("move_node.jstree create_node.jstree clean_node.jstree change_node.jstree", $.proxy(function(e, data) {
+                .on("move_node.jstree create_node.jstree clean_node.jstree change_node.jstree", langx.proxy(function(e, data) {
                     var target = this.get_node(data || "#", true);
                     var id = _guid();
                     this._detachColumns(id);
                     this._prepare_grid(target);
                     this._reattachColumns(id);
                 }, this))
-                .on("delete_node.jstree", $.proxy(function(e, data) {
+                .on("delete_node.jstree", langx.proxy(function(e, data) {
                     if (data.node.id !== undefined) {
                         var grid = this.gridWrapper,
                             removeNodes = [data.node.id],
@@ -479,22 +479,22 @@ define([
                         findDataCell(this.uniq, removeNodes, this._gridSettings.gridcols).remove();
                     }
                 }, this))
-                .on("show_node.jstree", $.proxy(function(e, data) {
+                .on("show_node.jstree", langx.proxy(function(e, data) {
                     this._hideOrShowTree(data.node, false);
                 }, this))
-                .on("hide_node.jstree", $.proxy(function(e, data) {
+                .on("hide_node.jstree", langx.proxy(function(e, data) {
                     this._hideOrShowTree(data.node, true);
                 }, this))
-                .on("close_node.jstree", $.proxy(function(e, data) {
+                .on("close_node.jstree", langx.proxy(function(e, data) {
                     this._hide_grid(data.node);
                 }, this))
-                .on("open_node.jstree", $.proxy(function(e, data) {}, this))
-                .on("load_node.jstree", $.proxy(function(e, data) {}, this))
-                .on("loaded.jstree", $.proxy(function(e) {
+                .on("open_node.jstree", langx.proxy(function(e, data) {}, this))
+                .on("load_node.jstree", langx.proxy(function(e, data) {}, this))
+                .on("loaded.jstree", langx.proxy(function(e) {
                     this._prepare_headers();
                     this.element.trigger("loaded_grid.jstree");
                 }, this))
-                .on("ready.jstree", $.proxy(function(e, data) {
+                .on("ready.jstree", langx.proxy(function(e, data) {
                     // find the line-height of the first known node
                     var anchorHeight = this.element.find("[class~='jstree-anchor']:first").outerHeight(),
                         q,
@@ -509,16 +509,16 @@ define([
                     this.gridWrapper.addClass(q.join(" "));
 
                 }, this))
-                .on("move_node.jstree", $.proxy(function(e, data) {
+                .on("move_node.jstree", langx.proxy(function(e, data) {
                     var node = data.new_instance.element;
                     //renderAWidth(node,this);
                     // check all the children, because we could drag a tree over
-                    node.find("li > a").each($.proxy(function(i, elm) {
+                    node.find("li > a").each(langx.proxy(function(i, elm) {
                         //renderAWidth($(elm),this);
                     }, this));
 
                 }, this))
-                .on("hover_node.jstree", $.proxy(function(node, selected, event) {
+                .on("hover_node.jstree", langx.proxy(function(node, selected, event) {
                     var id = selected.node.id;
                     if (this._hover_node !== null && this._hover_node !== undefined) {
                         findDataCell(this.uniq, this._hover_node, this._gridSettings.gridcols).removeClass("jstree-hovered");
@@ -526,27 +526,27 @@ define([
                     this._hover_node = id;
                     findDataCell(this.uniq, id, this._gridSettings.gridcols).addClass("jstree-hovered");
                 }, this))
-                .on("dehover_node.jstree", $.proxy(function(node, selected, event) {
+                .on("dehover_node.jstree", langx.proxy(function(node, selected, event) {
                     var id = selected.node.id;
                     this._hover_node = null;
                     findDataCell(this.uniq, id, this._gridSettings.gridcols).removeClass("jstree-hovered");
                 }, this))
-                .on("select_node.jstree", $.proxy(function(node, selected, event) {
+                .on("select_node.jstree", langx.proxy(function(node, selected, event) {
                     var id = selected.node.id;
                     findDataCell(this.uniq, id, this._gridSettings.gridcols).addClass("jstree-clicked");
                     this.get_node(selected.node.id, true).children("div.jstree-grid-cell").addClass("jstree-clicked");
                 }, this))
-                .on("deselect_node.jstree", $.proxy(function(node, selected, event) {
+                .on("deselect_node.jstree", langx.proxy(function(node, selected, event) {
                     var id = selected.node.id;
                     findDataCell(this.uniq, id, this._gridSettings.gridcols).removeClass("jstree-clicked");
                 }, this))
-                .on("deselect_all.jstree", $.proxy(function(node, selected, event) {
+                .on("deselect_all.jstree", langx.proxy(function(node, selected, event) {
                     // get all of the ids that were unselected
                     var ids = selected.node || [],
                         i;
                     findDataCell(this.uniq, ids, this._gridSettings.gridcols).removeClass("jstree-clicked");
                 }, this))
-                .on("search.jstree", $.proxy(function(e, data) {
+                .on("search.jstree", langx.proxy(function(e, data) {
                     // search sometimes filters, so we need to hide all of the appropriate grid cells as well, and show only the matches
                     var grid = this.gridWrapper,
                         that = this,
@@ -597,7 +597,7 @@ define([
                     }
                     return true;
                 }, this))
-                .on("clear_search.jstree", $.proxy(function(e, data) {
+                .on("clear_search.jstree", langx.proxy(function(e, data) {
                     // search has been cleared, so we need to show all rows
                     var grid = this.gridWrapper,
                         ids = getIds(data.nodes.filter(".jstree-node"));
@@ -615,33 +615,33 @@ define([
                     newtree._reattachColumns(obj.id);
                     return true;
                 })
-                .on("show_ellipsis.jstree", $.proxy(function(e, data) {
+                .on("show_ellipsis.jstree", langx.proxy(function(e, data) {
                     this.gridWrapper.find(".jstree-grid-cell").add(".jstree-grid-header", this.gridWrapper).addClass("jstree-grid-ellipsis");
                     return true;
                 }, this))
-                .on("hide_ellipsis.jstree", $.proxy(function(e, data) {
+                .on("hide_ellipsis.jstree", langx.proxy(function(e, data) {
                     this.gridWrapper.find(".jstree-grid-cell").add(".jstree-grid-header", this.gridWrapper).removeClass("jstree-grid-ellipsis");
                     return true;
                 }, this));
             if (this._gridSettings.isThemeroller) {
                 this.element
-                    .on("select_node.jstree", $.proxy(function(e, data) {
+                    .on("select_node.jstree", langx.proxy(function(e, data) {
                         data.rslt.obj.children("[class~='jstree-anchor']").nextAll("div").addClass("ui-state-active");
                     }, this))
-                    .on("deselect_node.jstree deselect_all.jstree", $.proxy(function(e, data) {
+                    .on("deselect_node.jstree deselect_all.jstree", langx.proxy(function(e, data) {
                         data.rslt.obj.children("[class~='jstree-anchor']").nextAll("div").removeClass("ui-state-active");
                     }, this))
-                    .on("hover_node.jstree", $.proxy(function(e, data) {
+                    .on("hover_node.jstree", langx.proxy(function(e, data) {
                         data.rslt.obj.children("[class~='jstree-anchor']").nextAll("div").addClass("ui-state-hover");
                     }, this))
-                    .on("dehover_node.jstree", $.proxy(function(e, data) {
+                    .on("dehover_node.jstree", langx.proxy(function(e, data) {
                         data.rslt.obj.children("[class~='jstree-anchor']").nextAll("div").removeClass("ui-state-hover");
                     }, this));
             }
 
             if (this._gridSettings.stateful) {
                 this.element
-                    .on("resize_column.jstree-grid", $.proxy(function(e, col, width) {
+                    .on("resize_column.jstree-grid", langx.proxy(function(e, col, width) {
                         localStorage['jstree-root-' + this.rootid + '-column-' + col] = width;
                     }, this));
             }
@@ -944,7 +944,7 @@ define([
          * Override open_node to detach the columns before redrawing child-nodes, and do reattach them afterwarts
          */
         this.open_node = function(obj, callback, animation) {
-            var isArray = $.isArray(obj);
+            var isArray = langx.isArray(obj);
             var node = null;
             if (!isArray) {
                 node = this.get_node(obj);
@@ -963,7 +963,7 @@ define([
          * Override redraw_node to correctly insert the grid
          */
         this.redraw_node = function(obj, deep, is_callback, force_render) {
-            var id = $.isArray(obj) ? _guid() : this.get_node(obj).id;
+            var id = langx.isArray(obj) ? _guid() : this.get_node(obj).id;
             // we detach the columns once
             this._detachColumns(id);
             // first allow the parent to redraw the node
@@ -1128,7 +1128,7 @@ define([
                         "lineHeight": (this._data.core.li_height) + "px",
                         "width": "150px" // will be set a bit further down
                     },
-                    "blur": $.proxy(function() {
+                    "blur": langx.proxy(function() {
                         var v = h2.val();
                         // save the value if changed
                         if (v === "" || v === t) {
@@ -1258,7 +1258,7 @@ define([
                 highlightSearch, isClicked,
                 peers = this.get_node(objData.parent).children,
                 // find my position in the list of peers. "peers" is the list of everyone at my level under my parent, in order
-                pos = $.inArray(lid, peers),
+                pos = langx.inArray(lid, peers),
                 hc = this.holdingCells,
                 rendered = false,
                 closed;

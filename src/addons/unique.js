@@ -73,25 +73,25 @@ define([
 					if (w) {
 						t = t.replace(/^[\s\uFEFF\xA0]+|[\s\uFEFF\xA0]+$/g, '');
 					}
-					i = ($.inArray(n, c) === -1 || (obj.text && t === n));
+					i = (langx.inArray(n, c) === -1 || (obj.text && t === n));
 					if(!i) {
 						this._data.core.last_error = { 'error' : 'check', 'plugin' : 'unique', 'id' : 'unique_01', 'reason' : 'Child with name ' + n + ' already exists. Preventing: ' + chk, 'data' : JSON.stringify({ 'chk' : chk, 'pos' : pos, 'obj' : obj && obj.id ? obj.id : false, 'par' : par && par.id ? par.id : false }) };
 					}
 					return i;
 				case "create_node":
-					i = ($.inArray(n, c) === -1);
+					i = (langx.inArray(n, c) === -1);
 					if(!i) {
 						this._data.core.last_error = { 'error' : 'check', 'plugin' : 'unique', 'id' : 'unique_04', 'reason' : 'Child with name ' + n + ' already exists. Preventing: ' + chk, 'data' : JSON.stringify({ 'chk' : chk, 'pos' : pos, 'obj' : obj && obj.id ? obj.id : false, 'par' : par && par.id ? par.id : false }) };
 					}
 					return i;
 				case "copy_node":
-					i = ($.inArray(n, c) === -1);
+					i = (langx.inArray(n, c) === -1);
 					if(!i) {
 						this._data.core.last_error = { 'error' : 'check', 'plugin' : 'unique', 'id' : 'unique_02', 'reason' : 'Child with name ' + n + ' already exists. Preventing: ' + chk, 'data' : JSON.stringify({ 'chk' : chk, 'pos' : pos, 'obj' : obj && obj.id ? obj.id : false, 'par' : par && par.id ? par.id : false }) };
 					}
 					return i;
 				case "move_node":
-					i = ( (obj.parent === par.id && (!more || !more.is_multi)) || $.inArray(n, c) === -1);
+					i = ( (obj.parent === par.id && (!more || !more.is_multi)) || langx.inArray(n, c) === -1);
 					if(!i) {
 						this._data.core.last_error = { 'error' : 'check', 'plugin' : 'unique', 'id' : 'unique_03', 'reason' : 'Child with name ' + n + ' already exists. Preventing: ' + chk, 'data' : JSON.stringify({ 'chk' : chk, 'pos' : pos, 'obj' : obj && obj.id ? obj.id : false, 'par' : par && par.id ? par.id : false }) };
 					}
@@ -134,7 +134,7 @@ define([
 				if (w) {
 					t = t.replace(/^[\s\uFEFF\xA0]+|[\s\uFEFF\xA0]+$/g, '');
 				}
-				while($.inArray(t, dpc) !== -1) {
+				while(langx.inArray(t, dpc) !== -1) {
 					n = cb.call(this, tmp, (++i)).toString();
 					t = n;
 					if (!s) {

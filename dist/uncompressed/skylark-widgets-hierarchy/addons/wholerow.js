@@ -21,17 +21,17 @@ define([
 			parent.bind.call(this);
 
 			this.element
-				.on('ready.jstree set_state.jstree', $.proxy(function () {
+				.on('ready.jstree set_state.jstree', langx.proxy(function () {
 						this.hide_dots();
 					}, this))
-				.on("init.jstree loading.jstree ready.jstree", $.proxy(function () {
+				.on("init.jstree loading.jstree ready.jstree", langx.proxy(function () {
 						//div.style.height = this._data.core.li_height + 'px';
 						this.get_container_ul().addClass('jstree-wholerow-ul');
 					}, this))
-				.on("deselect_all.jstree", $.proxy(function (e, data) {
+				.on("deselect_all.jstree", langx.proxy(function (e, data) {
 						this.element.find('.jstree-wholerow-clicked').removeClass('jstree-wholerow-clicked');
 					}, this))
-				.on("changed.jstree", $.proxy(function (e, data) {
+				.on("changed.jstree", langx.proxy(function (e, data) {
 						this.element.find('.jstree-wholerow-clicked').removeClass('jstree-wholerow-clicked');
 						var tmp = false, i, j;
 						for(i = 0, j = data.selected.length; i < j; i++) {
@@ -41,14 +41,14 @@ define([
 							}
 						}
 					}, this))
-				.on("open_node.jstree", $.proxy(function (e, data) {
+				.on("open_node.jstree", langx.proxy(function (e, data) {
 						this.get_node(data.node, true).find('.jstree-clicked').parent().children('.jstree-wholerow').addClass('jstree-wholerow-clicked');
 					}, this))
-				.on("hover_node.jstree dehover_node.jstree", $.proxy(function (e, data) {
+				.on("hover_node.jstree dehover_node.jstree", langx.proxy(function (e, data) {
 						if(e.type === "hover_node" && this.is_disabled(data.node)) { return; }
 						this.get_node(data.node, true).children('.jstree-wholerow')[e.type === "hover_node"?"addClass":"removeClass"]('jstree-wholerow-hovered');
 					}, this))
-				.on("contextmenu.jstree", ".jstree-wholerow", $.proxy(function (e) {
+				.on("contextmenu.jstree", ".jstree-wholerow", langx.proxy(function (e) {
 						if (this._data.contextmenu) {
 							e.preventDefault();
 							var tmp = $.Event('contextmenu', { metaKey : e.metaKey, ctrlKey : e.ctrlKey, altKey : e.altKey, shiftKey : e.shiftKey, pageX : e.pageX, pageY : e.pageY });
@@ -74,19 +74,19 @@ define([
 						var tmp = $.Event('dblclick', { metaKey : e.metaKey, ctrlKey : e.ctrlKey, altKey : e.altKey, shiftKey : e.shiftKey });
 						$(e.currentTarget).closest(".jstree-node").children(".jstree-anchor").first().trigger(tmp).focus();
 					})
-				.on("click.jstree", ".jstree-leaf > .jstree-ocl", $.proxy(function (e) {
+				.on("click.jstree", ".jstree-leaf > .jstree-ocl", langx.proxy(function (e) {
 						e.stopImmediatePropagation();
 						var tmp = $.Event('click', { metaKey : e.metaKey, ctrlKey : e.ctrlKey, altKey : e.altKey, shiftKey : e.shiftKey });
 						$(e.currentTarget).closest(".jstree-node").children(".jstree-anchor").first().trigger(tmp).focus();
 					}, this))
-				.on("mouseover.jstree", ".jstree-wholerow, .jstree-icon", $.proxy(function (e) {
+				.on("mouseover.jstree", ".jstree-wholerow, .jstree-icon", langx.proxy(function (e) {
 						e.stopImmediatePropagation();
 						if(!this.is_disabled(e.currentTarget)) {
 							this.hover_node(e.currentTarget);
 						}
 						return false;
 					}, this))
-				.on("mouseleave.jstree", ".jstree-node", $.proxy(function (e) {
+				.on("mouseleave.jstree", ".jstree-node", langx.proxy(function (e) {
 						this.dehover_node(e.currentTarget);
 					}, this));
 		};
@@ -101,7 +101,7 @@ define([
 			if(obj) {
 				var tmp = div.cloneNode(true);
 				//tmp.style.height = this._data.core.li_height + 'px';
-				if($.inArray(obj.id, this._data.core.selected) !== -1) { tmp.className += ' jstree-wholerow-clicked'; }
+				if(langx.inArray(obj.id, this._data.core.selected) !== -1) { tmp.className += ' jstree-wholerow-clicked'; }
 				if(this._data.core.focused && this._data.core.focused === obj.id) { tmp.className += ' jstree-wholerow-hovered'; }
 				obj.insertBefore(tmp, obj.childNodes[0]);
 			}
